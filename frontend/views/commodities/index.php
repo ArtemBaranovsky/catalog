@@ -10,23 +10,26 @@ use yii\widgets\ListView;
 $this->title = 'Commodities';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="commodities-index">
+<div class="simple-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="commodities-index">
 
-    <p>
-        <?= Html::a('Create Commodities', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+        <h1><?= Html::encode($this->title) ?></h1>
 
-    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
+        <p>
+            <?= Html::a('Create Commodities', ['create'], ['class' => 'btn btn-success']) ?>
+        </p>
 
-    <?= ListView::widget([
-        'dataProvider' => $dataProvider,
-        'itemOptions' => ['class' => 'item'],
-        'itemView' => function ($model, $key, $index, $widget) {
-            return Html::a(Html::encode($model->title), ['view', 'id' => $model->id]);
-        },
-    ]) ?>
+        <?php echo $this->render('_search', ['model' => $searchModel]); ?>
+
+        <?= ListView::widget([
+            'dataProvider' => $dataProvider,
+            'itemOptions' => ['class' => 'item'],
+            'itemView' => function ($model, $key, $index, $widget) {
+                return Html::a(Html::encode($model->title), ['view', 'id' => $model->id]);
+            },
+        ]) ?>
 
 
+    </div>
 </div>

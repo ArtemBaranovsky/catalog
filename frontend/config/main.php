@@ -11,11 +11,16 @@ return [
 	'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'language' => 'ru-Ru',
+    'defaultRoute' => 'categories/index',
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
 			],
+        'cache' => [
+            'class' => 'yii\caching\FileCache',
+        ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
@@ -42,10 +47,13 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'categories/<id:\d+>/<page:\d+>' => 'categories/view',
+                'categories/<id:\d+>' => 'categories/view',
+                'commodities/<id:\d+>' => 'commodities/view',
             ],
         ],
-        
-		'mailer' => [
+
+        'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
                         // send all mails to a file by default. You have to set
             // 'useFileTransport' to false and configure a transport
@@ -56,7 +64,6 @@ return [
                 'class' => 'Swift_SmtpTransport',
                 'host' => 'smtp.gmail.com',
                 'username' => 'testewallet940@gmail.com',
-                // 'password' => "test123+",
                 'password' => "xndilvxdjpznjmoh",
 
                 // 'port' => '465',

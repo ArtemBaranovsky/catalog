@@ -1,6 +1,9 @@
 <?php
 
 namespace common\models;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+
 
 use Yii;
 
@@ -9,7 +12,8 @@ use Yii;
  *
  * @property int $id
  * @property string $title
- *
+ * @property int $parent_id
+ * @property string $description
  * @property Commodities[] $commodities
  */
 class Categories extends \yii\db\ActiveRecord
@@ -22,6 +26,34 @@ class Categories extends \yii\db\ActiveRecord
         return 'categories';
     }
 
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['edit', 'create', 'delete'],
+                'rules' => [
+                    [
+                        'actions' => ['view', 'index'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'actions' => ['edit', 'create', 'delete'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'logout' => ['post'],
+                ],
+            ],
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -29,7 +61,9 @@ class Categories extends \yii\db\ActiveRecord
     {
         return [
             [['title'], 'required'],
+            [['parent_id'], 'integer'],
             [['title'], 'string', 'max' => 50],
+            [['description'], 'string', 'max' => 255],
         ];
     }
 
@@ -41,6 +75,8 @@ class Categories extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'title' => 'Title',
+            'parent_id' => 'Parent ID',
+            'description' => 'Description',
         ];
     }
 

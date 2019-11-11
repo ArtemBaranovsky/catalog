@@ -13,7 +13,7 @@ use yii\web\UploadedFile;
 /**
  * CommoditiesController implements the CRUD actions for Commodities model.
  */
-class CommoditiesController extends Controller
+class CommoditiesController extends AppController
 {
     /**
      * {@inheritdoc}
