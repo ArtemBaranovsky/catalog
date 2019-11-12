@@ -12,7 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="simple-view">
 
-    <div class="commodities-index">
+    <div class="commodities-index container">
 
         <h1><?= Html::encode($this->title) ?></h1>
 

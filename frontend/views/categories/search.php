@@ -54,10 +54,10 @@ use yii\widgets\LinkPager;
             <div class="col-sm-9 padding-right">
                 <div class="features_items"><!--features_items-->
                     <?php if (!empty($commodities)) : ?>
+                        <h2 class="title text-center">You searched: <?php echo $q ?></h2>
                         <?php $cnt =0; ?>
                         <?php foreach ($commodities as $commodity ) : ?>
                             <div class="col-sm-4">
-                                <h2 class="title text-center"><?php echo $commodity->category->title ?></h2>
                                 <div class="product-image-wrapper">
                                     <div class="single-products">
                                         <div class="productinfo text-center">
@@ -96,7 +96,7 @@ use yii\widgets\LinkPager;
                         ?>
 
                     <?php else : ?>
-                        <h2>There isn't any commodity yet.</h2>
+                        <h2>There is nothing have found.</h2>
                     <?php endif; ?>
 
                     <div class="clearfix"></div>

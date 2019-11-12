@@ -88,4 +88,30 @@ class Categories extends \yii\db\ActiveRecord
         return $this->hasMany(Commodities::className(), ['category_id' => 'id']);
     }
 
+    public static function getItemsInter($indent = '', $parent_id = 0)
+    {
+        $items = [];
+        // for all childs of $parent_id (roots if $parent_id == null)
+        $groups = self::find()->where(['parent_id'=>$parent_id])
+            ->orderBy('parent_id')->all();
+
+        foreach($groups as $group)
+        {
+            // add group to items list
+            $items["_{$group->id}"] = $indent.$group->title;
+            // recursively add children to the list with indent
+            $items = array_merge($items, self::getItemsInter($indent.'>', $group->id));
+
+        }
+        return $items;
+    }
+
+    public static function getItems(){
+        $items = self::getItemsInter();
+        foreach ($items as $key => $item) {
+            $keys[$key] = ltrim($key, '_');
+        }
+        $items = array_combine($keys,$items);
+    return $items;
+    }
 }

@@ -22,9 +22,8 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'price') ?>
     <?= $form->field($model, 'description') ?>
 
-    <?= $form->field($model/*->categories*/, 'category_id')->dropDownList($model->getCategoryList(), [
-        'prompt' => 'Select Category'
-    ])->label(false) ?>
+    <?php echo $form->field($model, 'category_id')->dropDownList( common\models\Categories::getItems(), [
+        'prompt' => 'Select Category'])->label(false); ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

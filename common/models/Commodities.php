@@ -87,4 +87,28 @@
 				return false;
 			}
 		}
+
+        public static function getItems($indent = '', $parent_id = 0)
+        {
+            $items = [];
+            // for all childs of $parent_id (roots if $parent_id == null)
+            $groups = self::find()->where(['parent_id'=>$parent_id])
+                ->orderBy('parent_id')/*->asArray()*/->all();
+//            die(var_dump("<pre>", $groups, "</pre>"));
+
+            foreach($groups as $group)
+            {
+                // add group to items list
+                $items[$group->id] = $indent.$group->title;
+//            (var_dump("<pre>",  $indent.$group->title, "</pre>"));
+                // recursively add children to the list with indent
+                $items = array_merge($items, self::getItems($indent.'>', $group->id));
+
+            }
+//        (var_dump("<pre>",  $items, "</pre>"));
+//        die(var_dump("<pre>", $items, "</pre>"));
+
+            return $items;
+        }
+
 	} 	

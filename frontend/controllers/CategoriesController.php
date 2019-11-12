@@ -10,7 +10,7 @@ use yii\data\Pagination;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\filters\AccessControl;
 /**
  * CategoriesController implements the CRUD actions for Categories model.
  */
@@ -19,13 +19,30 @@ class CategoriesController extends AppController
     /**
      * {@inheritdoc}
      */
+
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['index', 'view'],
+                'rules' => [
+                    [
+                        'actions' => ['index', 'view'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'actions' => ['index', 'view', 'create', 'delete', 'update'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'logout' => ['post'],
                 ],
             ],
         ];
@@ -37,17 +54,9 @@ class CategoriesController extends AppController
      */
     public function actionIndex()
     {
-//        $searchModel = new CategoriesSearch();
-//        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $items = Commodities::find()->limit(6)->all();
+        $items = Commodities::find()->limit(36)->all();
         $this->setMeta('Products catalog prototype');
-//        var_dump($items);
-        return $this->render('index', ['items' => $items ]/*compact($items)*/
-//        [
-//            'searchModel' => $searchModel,
-//            'dataProvider' => $dataProvider,
-//        ]
-        );
+        return $this->render('index', ['items' => $items ] );
     }
 
     /**
@@ -56,14 +65,17 @@ class CategoriesController extends AppController
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView(/*$id*/)
+    public function actionView($id)
     {
         $id = Yii::$app->request->get('id');
+        $categories = Categories::findOne($id);
+        if (empty($categories)) { // item does not exist
+            throw new \yii\web\HttpException(404, 'The requested Category could not be found.');
+        }
 //        $commodities = Commodities::find()->where(['category_id' => $id])->limit(6)->all();
         $query = Commodities::find()->where(['category_id' => $id])->limit(6);
         $pages = new Pagination(['totalCount' => $query->count(), 'pageSize' => 6, 'forcePageParam' => false, 'pageSizeParam' => false ]);
         $commodities = $query->offset($pages->offset)->limit($pages->limit)->all();
-        $categories = Categories::findOne($id);
         $this->setMeta('Products catalog prototype | ' . $categories->title, null, $categories->description);
 
         return $this->render('view',[
@@ -71,6 +83,16 @@ class CategoriesController extends AppController
                 'categories' => $categories,
                 'pages' => $pages,
             ]);
+    }
+
+    public function actionSearch()
+    {
+        $q = Yii::$app->request->get('q');
+        $query = Commodities::find()->where(['like', 'title', $q]);
+        $pages = new Pagination(['totalCount' => $query->count(), 'pageSize' => 6, 'forcePageParam' => false, 'pageSizeParam' => false ]);
+        $commodities = $query->offset($pages->offset)->limit($pages->limit)->all();
+
+        return $this->render('search', compact('commodities', 'pages', 'q'));
     }
 
     /**

@@ -50,6 +50,8 @@ return [
                 'categories/<id:\d+>/<page:\d+>' => 'categories/view',
                 'categories/<id:\d+>' => 'categories/view',
                 'commodities/<id:\d+>' => 'commodities/view',
+                'search' => 'categories/search',
+
             ],
         ],
 
@@ -66,15 +68,9 @@ return [
                 'username' => 'testewallet940@gmail.com',
                 'password' => "xndilvxdjpznjmoh",
 
-                // 'port' => '465',
                 'encryption' => 'tls',
                 'port' => '587',
                 'streamOptions' => [
-                    // 'ssl' => [
-                    //     'allow_self_signed' => true,
-                    //     'verify_peer' => false,
-                    //     'verify_peer_name' => false,
-                    // ],
                 ],
             ], 
 		], 

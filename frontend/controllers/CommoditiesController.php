@@ -6,9 +6,10 @@ use Yii;
 use common\models\Commodities;
 use common\models\CommoditiesSearch;
 use yii\web\Controller;
+use yii\data\Pagination;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\web\UploadedFile;
+use yii\filters\AccessControl;use yii\web\UploadedFile;
 
 /**
  * CommoditiesController implements the CRUD actions for Commodities model.
@@ -21,10 +22,25 @@ class CommoditiesController extends AppController
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['index', 'view', 'create', 'delete', 'update'],
+                'rules' => [
+                    [
+                        'actions' => ['index', 'view'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'logout' => ['post'],
                 ],
             ],
         ];
@@ -36,13 +52,11 @@ class CommoditiesController extends AppController
      */
     public function actionIndex()
     {
+        $items = Commodities::find()->limit(6)->all();
+        $this->setMeta('Products catalog prototype');
         $searchModel = new CommoditiesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        return $this->render('index', compact(['items', 'searchModel', 'dataProvider'] ));
     }
 
     /**
@@ -53,10 +67,17 @@ class CommoditiesController extends AppController
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+//        $id = Yii::$app->request->get('id');
+        $commodity = Commodities::findOne($id);
+        if (empty($commodity)) { // item does not exist
+            throw new \yii\web\HttpException(404, 'The requested commodity could not be found.');
+        }
+        $similars = Commodities::find()->where(['category_id' => $commodity->category->id])
+                                    ->select(['id', 'title', 'lead_photo', 'price', 'quantity'])->all();
+        return $this->render('view', compact('commodity', 'similars') );
     }
+
+
 
     /**
      * Creates a new Commodities model.
@@ -81,7 +102,6 @@ class CommoditiesController extends AppController
             ]);
         }
     }
-
 
     /**
      * Updates an existing Commodities model.

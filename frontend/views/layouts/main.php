@@ -97,11 +97,11 @@ ltAppAsset::register($this);
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
 							<ul class="nav navbar-nav">
-								<li><a href="#"><i class="fa fa-user"></i> Account</a></li>
+								<li><a href="<?=\yii\helpers\Url::to(['site/signup'])?>"><i class="fa fa-user"></i> Account</a></li>
 								<li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
 								<li><a href="checkout.html"><i class="fa fa-crosshairs"></i> Checkout</a></li>
 								<li><a href="cart.html"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-								<li><a href="<?=\yii\helpers\Url::to(['site/login'])?>"><i class="fa fa-lock"></i> Login</a></li>
+								<li><a href="<?=(Yii::$app->user->isGuest) ? \yii\helpers\Url::to(['site/login']) : \yii\helpers\Url::to(['site/logout']) ?>"><i class="fa fa-lock"></i><?=(Yii::$app->user->isGuest) ? 'Login' : 'Logout (' . Yii::$app->user->identity->username . ')' ?></a></li>
 							</ul>
 						</div>
 					</div>
@@ -123,31 +123,35 @@ ltAppAsset::register($this);
 						</div>
 						<div class="mainmenu pull-left">
 							<ul class="nav navbar-nav collapse navbar-collapse">
-								<li><a href="index.html" class="active">Home</a></li>
+								<li><a href="<?=\yii\helpers\Url::home() ?>" class="active">Home</a></li>
 								<li class="dropdown"><a href="#">Shop<i class="fa fa-angle-down"></i></a>
                                     <ul role="menu" class="sub-menu">
-                                        <li><a href="<?=\yii\helpers\Url::to([''])?>">Products</a></li>
-										<li><a href="product-details.html">Product Details</a></li> 
-										<li><a href="checkout.html">Checkout</a></li> 
-										<li><a href="cart.html">Cart</a></li> 
-										<li><a href="<?=\yii\helpers\Url::to(['site/login'])?>">Login</a></li>
+                                        <? if (!Yii::$app->user->isGuest) : ?>
+                                            <li><a href="<?=\yii\helpers\Url::to(['categories/index'])?>">Categories CRUD</a></li>
+                                            <li><a href="<?=\yii\helpers\Url::to(['commodities/index'])?>">Products CRUD</a></li>
+                                        <?php endif;?>
+                                            <li><a href="checkout.html">Checkout</a></li>
+                                            <li><a href="cart.html">Cart</a></li>
+                                            <li><a href="<?=\yii\helpers\Url::to(['site/login'])?>">Login</a></li>
                                     </ul>
                                 </li> 
-								<li class="dropdown"><a href="#">Blog<i class="fa fa-angle-down"></i></a>
-                                    <ul role="menu" class="sub-menu">
-                                        <li><a href="blog.html">Blog List</a></li>
-										<li><a href="blog-single.html">Blog Single</a></li>
-                                    </ul>
-                                </li> 
-								<li><a href="404.html">404</a></li>
+<!--								<li class="dropdown"><a href="#">Blog<i class="fa fa-angle-down"></i></a>-->
+<!--                                    <ul role="menu" class="sub-menu">-->
+<!--                                        <li><a href="blog.html">Blog List</a></li>-->
+<!--										<li><a href="blog-single.html">Blog Single</a></li>-->
+<!--                                    </ul>-->
+<!--                                </li> -->
+<!--								<li><a href="404.html">404</a></li>-->
 								<li><a href="<?=\yii\helpers\Url::to(['site/contact'])?>">Contact</a></li>
 							</ul>
 						</div>
 					</div>
 					<div class="col-sm-3">
 						<div class="search_box pull-right">
-							<input type="text" placeholder="Search"/>
-						</div>
+                            <form method="get" action="<?= \yii\helpers\Url::to(['categories/search'])?>">
+                                <input type="text" placeholder="Search" name="q"/>
+                            </form>
+                        </div>
 					</div>
 				</div>
 			</div>
@@ -256,11 +260,12 @@ ltAppAsset::register($this);
 						<div class="single-widget">
 							<h2>Quick Shop</h2>
 							<ul class="nav nav-pills nav-stacked">
-								<li><a href="#">T-Shirt</a></li>
-								<li><a href="#">Mens</a></li>
-								<li><a href="#">Womens</a></li>
-								<li><a href="#">Gift Cards</a></li>
-								<li><a href="#">Shoes</a></li>
+                                <li><a href="#">Lenovo</a></li>
+                                <li><a href="#">aomi</a></li>
+                                <li><a href="#">Asus</a></li>
+                                <li><a href="#">Apple</a></li>
+                                <li><a href="#">Samsung</a></li>
+
 							</ul>
 						</div>
 					</div>
@@ -306,8 +311,7 @@ ltAppAsset::register($this);
 		<div class="footer-bottom">
 			<div class="container">
 				<div class="row">
-					<p class="pull-left">Copyright @ 2019 E-SHOPPER Inc. All rights reserved.</p>
-					<p class="pull-right">Designed by <span><a target="_blank" href="http://www.themeum.com">Themeum</a></span></p>
+					<p class="pull-left">Copyright @ 2019 E-Catalog Inc. All rights reserved.</p>
 				</div>
 			</div>
 		</div>

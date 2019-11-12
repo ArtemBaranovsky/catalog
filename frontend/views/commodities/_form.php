@@ -27,9 +27,8 @@ use mihaildev\ckeditor\CKEditor;
         ],
     ]) ?>
 
-    <?= $form->field($model, 'category_id')->dropDownList($model->getCategoryList(), [
-        'prompt' => 'Select Category'
-    ])->label(false) ?>
+    <?php echo $form->field($model, 'category_id')->dropDownList( common\models\Categories::getItems(), [
+        'prompt' => 'Select Category'])->label(false); ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
